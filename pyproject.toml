@@ -1,0 +1,77 @@
+[tool.poetry]
+name = "2k-sistema"
+version = "0.1.0"
+description = "Sistema de gerenciamento de clientes"
+authors = ["Walber Vaz da Silva <wvs.walber@gmail.com>"]
+readme = "README.md"
+license = "MIT"
+packages = [
+  {include = "src", from = "."},
+  {include = "src/*", from = "."},
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.104.1"
+uvicorn = "^0.24.0.post1"
+
+[tool.poetry.group.dev.dependencies]
+pydantic = {extras = ["email"], version = "^2.5.1"}
+pytest = "^7.4.3"
+pytest-cov = "^4.1.0"
+taskipy = "^1.12.0"
+ruff = "^0.1.5"
+httpx = "^0.25.1"
+isort = "^5.12.0"
+black = "^23.11.0"
+pip-audit = "^2.6.1"
+pytest-asyncio = "^0.21.1"
+
+[tool.ruff]
+line-length = 79
+exclude = ['.venv', 'migrations']
+
+[tool.isort]
+profile = "black"
+line_length = 79
+extend_skip = ['migrations']
+
+[tool.pytest.ini_options]
+pythonpath = "."
+
+[tool.prospector]
+profile = "black"
+ignore = ["migrations", ".venv"]
+strictness = "high"
+
+[tool.black]
+line-length = 79
+skip-string-normalization = true
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | migrations
+)/
+'''
+
+[tool.taskipy.tasks]
+check_vulnerabilities = 'pip-audit'
+lint = 'ruff . && black --check . --diff && isort --check . --diff'
+format = 'black . && isort .'
+# run = 'uvicorn api.app:app --reload'
+pre_test = 'task lint'
+test = 'pytest -s -x --cov=src -vv'
+post_test = 'coverage html'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
