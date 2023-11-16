@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "2k-sistema"
+name = "python-architecture-project"
 version = "0.1.0"
 description = "Sistema de gerenciamento de clientes"
 authors = ["Walber Vaz da Silva <wvs.walber@gmail.com>"]
